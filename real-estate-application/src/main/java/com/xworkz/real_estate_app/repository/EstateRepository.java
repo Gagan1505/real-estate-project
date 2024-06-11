@@ -2,6 +2,7 @@ package com.xworkz.real_estate_app.repository;
 
 import com.xworkz.real_estate_app.dto.BiddDTO;
 import com.xworkz.real_estate_app.dto.PropertyDTO;
+import com.xworkz.real_estate_app.dto.SoldBoughtDTO;
 import com.xworkz.real_estate_app.dto.UserDTO;
 
 import java.time.LocalDateTime;
@@ -36,4 +37,12 @@ public interface EstateRepository {
 
     // ------------------- BID THE PROPERTY ---------------
     void addBidForProperty(BiddDTO biddDTO, Integer propertyId, Integer userId);
+
+    List<BiddDTO> getUserPropertiesToSell(Integer userId);
+
+    void sellProperty(Integer bidId,Integer sellerId);
+
+    List<SoldBoughtDTO> getPropertiesBoughtByUser(Integer userId);
+
+    List<SoldBoughtDTO> getPropertiesSoldByUser(Integer userId);
 }

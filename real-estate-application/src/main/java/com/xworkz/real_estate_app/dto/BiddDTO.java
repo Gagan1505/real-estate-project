@@ -1,17 +1,19 @@
 package com.xworkz.real_estate_app.dto;
 
 import lombok.*;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "bid_table")
-@Getter
-@Setter
+@Data
 @RequiredArgsConstructor
 @AllArgsConstructor
+@NamedQueries({
+        @NamedQuery(name = "getUserPropertiesToSell",query = "SELECT b FROM BiddDTO b JOIN PropertyDTO p" +
+                " ON p.propertyId = b.property WHERE p.user = :userId AND p.propertyStatus = 'FOR-SALE' ORDER BY b.bidAmount DESC")
+})
 public class BiddDTO {
 
     @Id
@@ -24,11 +26,14 @@ public class BiddDTO {
     private Long bidAmount;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_user_id")
+    @JoinColumn(name = "bidder_id")
     private UserDTO userBid;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_property_id",nullable = false)
+    @JoinColumn(name = "bid_property_id",nullable = false)
     private PropertyDTO property;
+
+    @OneToOne(mappedBy = "bid")
+    private SoldBoughtDTO soldBought;
 
 }

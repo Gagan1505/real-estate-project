@@ -95,8 +95,8 @@ public class UserDTO {
     @Column(name = "user_permanent_address")
     private String userPermanentAddress;
 
-    @NotNull(message = "* Password cannot be null")
-    @Size(min = 3,max = 15,message = "* Password must be between 3 to 15 characters only")
+//    @NotNull(message = "* Password cannot be null")
+//    @Size(min = 3,max = 15,message = "* Password must be between 3 to 15 characters only")
     @Column(name = "user_password")
     private String userPassword;
 
@@ -109,9 +109,6 @@ public class UserDTO {
     @Column(name = "registered_on")
     private LocalDateTime registeredOn;
 
-//    @Column(name = "audit_id")
-//    private int auditId;
-
     @OneToOne(cascade = CascadeType.ALL)
     @Cascade(value = org.hibernate.annotations.CascadeType.DELETE)
     @JoinColumn(name = "audit_id",referencedColumnName = "audit_id")
@@ -123,11 +120,19 @@ public class UserDTO {
     @Column(name = "user_deactivated_time")
     private LocalDateTime userDeactivatedTime;
 
+//    @Column(name = "user_profile_image_path")
+//    private String profileImgPath;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",orphanRemoval = true)
     private List<PropertyDTO> properties;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "userBid",orphanRemoval = true)
     private List<BiddDTO> bids;
+
+//    @OneToMany(mappedBy = "seller")
+//    private List<SoldBoughtDTO> sold;
+//
+//    @OneToMany(mappedBy = "buyer")
+//    private List<SoldBoughtDTO> bought;
 
 }

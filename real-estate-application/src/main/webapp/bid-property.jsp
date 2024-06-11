@@ -99,6 +99,11 @@
     </div>
     <form action="bid" method="POST">
         <div class="row">
+            <div class-"col">
+                <span>${success}</span>
+            </div>
+        </div>
+        <div class="row">
             <div class="col">
                 <input type="number" class="form-control" placeholder="Enter your value for the property" name="bidAmount" id="bidAmount" >
                 <span id="bidErr" class="msg"></span>

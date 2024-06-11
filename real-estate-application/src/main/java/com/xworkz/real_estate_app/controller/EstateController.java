@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-@SessionAttributes("userId")
 @RequestMapping("/")
 public class EstateController {
 
@@ -61,20 +60,22 @@ public class EstateController {
     /*      ------------------GET USER INFO TO UPDATE  -----------------   */
 
     @GetMapping("/userToUpdate")
-    public String getUserToUpdate(HttpServletRequest request,Model model){
-        Integer userId = (Integer)request.getSession().getAttribute("userId");
-        UserDTO user = service.getUserInfoToUpdate(userId);
-        if(user != null){
-            model.addAttribute("user",service.getUserInfoToUpdate(userId));
+    public String getUserToUpdate(HttpSession session,Model model){
+        Integer userId = (Integer)session.getAttribute("userId");
+        if(userId != null){
+            UserDTO user = service.getUserInfoToUpdate(userId);
+            model.addAttribute("user",user);
+            return "updateUserInfo";
         }else{
-            model.addAttribute("errMsg","Failed to fetch details ");
+            model.addAttribute("loginErr","Please login");
+            return "index";
         }
-        return "updateUserInfo";
+
     }
 
     /*   ---------------------- UPDATING THE RECORDS OF THE USER ----------------- */
     @PostMapping("/updateUser")
-    public String updateUser(@Valid UserDTO userDTO, BindingResult bindingResult,Model model,HttpServletRequest request){
+    public String updateUser(@Valid UserDTO userDTO, BindingResult bindingResult,Model model,HttpSession session){
         /* ----------------- CHECK FOR VALID INPUTS -------------------------- */
 
         model.addAttribute("user",userDTO);
@@ -89,7 +90,9 @@ public class EstateController {
             audit.setUpdatedBy(userDTO.getUserFirstName()+" "+userDTO.getUserLastName());
             audit.setUpdatedOn(LocalDateTime.now());
             userDTO.setAudit(audit);
-            service.updateUserInfoById((Integer)request.getSession().getAttribute("userId"), userDTO);
+            Integer userId = (Integer)session.getAttribute("userId");
+            System.err.println(userId);
+            service.updateUserInfoById(userId, userDTO);
             model.addAttribute("updateSuccessMsg","Updated successfully");
             return "userDashboard";
         }
@@ -116,24 +119,32 @@ public class EstateController {
 
     /*  --------------------------- TO REDIRECT USER FROM DASHBOARD TO DASHBOARD ---------------------*/
     @GetMapping("/toDashboard")
-    public RedirectView userFromDashboard(@RequestParam("id")Integer userId,Model model,HttpServletRequest request){
+    public String userFromDashboard(Model model,HttpSession session,HttpServletRequest request){
+        Integer userId = (Integer) session.getAttribute("userId");
+        System.err.println("User id in to Dashboard : >>>>>>>>>>>>>>>>>>>>>>> ----- "+userId);
         UserDTO userDTO = service.getUserByUserId(userId);
         model.addAttribute("user",userDTO);
-        RedirectView view = new RedirectView();
-        view.setUrl(request.getContextPath()+"/userDashboard.jsp");
-        return view;
+        return "userDashboard";
     }
 
     @GetMapping("/detailsToAddProperty")
-    public String getUserToAddProperty(@RequestParam("id")Integer userId,Model model){
-        UserDTO userDTO = service.getUserByUserId(userId);
-        model.addAttribute("user",userDTO);
-        return "addProperty";
+    public String getUserToAddProperty(HttpSession session,Model model){
+        Integer userId = (Integer)session.getAttribute("userId");
+        if(userId != null){
+            UserDTO userDTO = service.getUserByUserId(userId);
+            model.addAttribute("user",userDTO);
+            return "addProperty";
+        }else{
+            model.addAttribute("loginErr","Please login");
+            return "index";
+        }
+
     }
 
     @PostMapping("/sell")
-    public String addProperty(@Valid PropertyDTO propertyDTO,@RequestParam("id")Integer userId,BindingResult bindingResult,Model model){
+    public String addProperty(@Valid PropertyDTO propertyDTO,BindingResult bindingResult,Model model,HttpSession session){
         model.addAttribute("property",propertyDTO);
+        Integer userId = (Integer)session.getAttribute("userId");
         model.addAttribute("user",service.getUserByUserId(userId));
 
         if(bindingResult.hasErrors()){
@@ -149,38 +160,97 @@ public class EstateController {
     }
 
     @GetMapping("/estateProperties")
-    public String getAllProperties(@RequestParam("id")Integer userId,Model model){
-        System.err.println(userId);
-        List<PropertyDTO> estates = service.getAllPropertiesOtherThanUser(userId);
-        if(estates.isEmpty()){
-            model.addAttribute("NOTHING","no properties present to display");
+    public String getAllProperties(HttpSession session,Model model){
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null){
+            List<PropertyDTO> estates = service.getAllPropertiesOtherThanUser(userId);
+            if(estates.isEmpty()){
+                model.addAttribute("NOTHING","no properties present to display");
+            }else{
+                model.addAttribute("props",estates);
+                for(PropertyDTO p:estates){
+                    System.err.println("IN ESTATE PROPS "+p);
+                }
+            }
+            return "properties";
         }else{
-            model.addAttribute("props",estates);
+            model.addAttribute("loginErr","Please login");
+            return "index";
         }
-        return "properties";
     }
 
 
     @GetMapping("/bidProperty")
-    public String getPropertyToBid(HttpServletRequest request,@RequestParam("propertyId") Integer propertyId){
-        HttpSession session = request.getSession();
+    public String getPropertyToBid(HttpSession session,@RequestParam("propertyId") Integer propertyId){
         session.setAttribute("propertyId",propertyId);
         return "bid-property";
     }
 
 
     @PostMapping("/bid")
-    public String bidProperty(HttpServletRequest request,BiddDTO biddDTO,Model model){
-        HttpSession session = request.getSession();
+    public String bidProperty(HttpSession session,BiddDTO biddDTO,Model model){
         Integer propertyId = (Integer) session.getAttribute("propertyId");
         System.err.println("property id is ----- "+propertyId);
         Integer userId = (Integer)session.getAttribute("userId");
         System.err.println("user id is ----- "+userId);
         service.bidForAProperty(biddDTO,propertyId,userId);
         model.addAttribute("success","Success ");
-
         return "bid-property";
     }
+
+    @GetMapping("/propertiesToSell")
+    public String getUserPropertiesToSell(HttpSession session,Model model){
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null){
+            System.err.println("User Id in propertiesToSell is : "+userId);
+            List<BiddDTO> bidsList = service.getAllUserPropertiesToSell(userId);
+            model.addAttribute("bids",bidsList);
+            return "userProperties";
+        }else{
+            model.addAttribute("loginErr","Please login");
+            return "index";
+        }
+    }
+
+    @GetMapping("/sellProperty")
+    public String sellProperty(@RequestParam("bidId")Integer bidId,HttpSession session,Model model){
+        Integer sellerId = (Integer) session.getAttribute("userId");
+        service.sellProperty(bidId,sellerId);
+        model.addAttribute("SellSuccess","Successsfully Sold property");
+        return "userProperties";
+    }
+
+
+    // ----------------- BOUGHT PROPERTIES ----------------
+    @GetMapping("/bought")
+    private String propertiesBoughtByUser(Model model,HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
+        model.addAttribute("buyedProps",service.getPropertiesBoughtByUser(userId));
+        return "propertiesBought";
+    }
+
+
+    // ------------SOLD PROPERTIES ---------------------
+    @GetMapping("/sold")
+    private String propertiesSoldByUser(Model model,HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
+        if(userId != null){
+            model.addAttribute("soldProps",service.getPropertiesSoldByUser(userId));
+            return "propertiesSold";
+        }else{
+            model.addAttribute("loginError","Please LOgin Again");
+            return "index";
+        }
+    }
+
+
+    @GetMapping("/logout")
+    public String userLogout(HttpSession session){
+        session.invalidate();
+        return "index";
+    }
+
+
 }
 
 

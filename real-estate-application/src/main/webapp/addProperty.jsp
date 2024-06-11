@@ -87,9 +87,9 @@
     <div class="navbar m-0 p-0">
         <div class="logo">
             <img src="https://www.x-workz.in//static/media/Logo.cf195593dc1b3f921369.png" width="100" height="50" alt="Xworkz" class="logo-img">
-            <a href="toDashboard?id=${user.getUserId()}"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+            <a href="toDashboard"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
                  <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-            </svg></a>
+            </svg>HOME</a>
         </div>
     </div>
     <form action="sell" method="POST">
@@ -106,12 +106,6 @@
               </div>
         </div>
         <div class="row">
-                    <div class="col">
-                      <input type="number" class="form-control" placeholder="user id is" name="id" id="userId" value="${user.getUserId()}"style="display:none">
-                      <span></span>
-                    </div>
-        </div>
-        <div class="row">
             <div class="col">
               <input type="text" class="form-control" placeholder="Enter the dimensions of the property" name="dimensions" id="dimensions" required>
               <span></span>
@@ -121,6 +115,7 @@
             <div class="col">
               <input type="number" class="form-control" placeholder="Enter the base value for the property in INR" name="propertyValue" id="propertyValue" >
               <span id="emailErr" class="msg"></span>
+            </div>
         </div>
         <div class="row">
             <div class="col">

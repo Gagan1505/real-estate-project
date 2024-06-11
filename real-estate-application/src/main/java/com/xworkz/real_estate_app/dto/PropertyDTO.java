@@ -1,8 +1,6 @@
 package com.xworkz.real_estate_app.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,10 +10,13 @@ import java.util.List;
 @Table(name = "property")
 @Getter
 @Setter
-@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllProps",query = "select p from PropertyDTO p")
+                @NamedQuery(name = "getAllPropsToSell",query = "SELECT p FROM PropertyDTO p WHERE p.user != :currUser"),
+                @NamedQuery(name = "setPropertyStatus",query = "UPDATE PropertyDTO p " +
+                        "SET p.propertyStatus = 'SOLD' WHERE p.propertyId = :pId")
         }
 )
 public class PropertyDTO {
@@ -34,12 +35,17 @@ public class PropertyDTO {
     @Column(name = "property_location")
     private String propertyLocation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",nullable = false)
-    private UserDTO user;
+    @Column(name = "property_status")
+    private String propertyStatus;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id",nullable = false)
+    private UserDTO user;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "property",orphanRemoval = true)
     private List<BiddDTO> bids;
+
+    @OneToOne(mappedBy = "property")
+    private SoldBoughtDTO soldBoughtDTO;
 
 }

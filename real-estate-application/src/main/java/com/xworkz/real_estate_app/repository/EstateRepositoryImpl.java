@@ -1,9 +1,6 @@
 package com.xworkz.real_estate_app.repository;
 
-import com.xworkz.real_estate_app.dto.AuditDTO;
-import com.xworkz.real_estate_app.dto.BiddDTO;
-import com.xworkz.real_estate_app.dto.PropertyDTO;
-import com.xworkz.real_estate_app.dto.UserDTO;
+import com.xworkz.real_estate_app.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -220,6 +217,7 @@ public class EstateRepositoryImpl implements EstateRepository{
             query.setParameter("pan",user.getUserPanCard());
             query.setParameter("current",user.getUserCurrentAddress());
             query.setParameter("permanent",user.getUserPermanentAddress());
+            query.setParameter("id",userId);
             query.executeUpdate();
 
             em.createNamedQuery("updateAudit").setParameter("ub",user.getAudit().getUpdatedBy())
@@ -259,6 +257,7 @@ public class EstateRepositoryImpl implements EstateRepository{
         EntityManager em = factory.createEntityManager();
         try {
             em.getTransaction().begin();
+            System.err.println("User id in add property is : "+userId);
             UserDTO userDTO = em.find(UserDTO.class,userId);
             propertyDTO.setUser(userDTO);
 
@@ -281,8 +280,9 @@ public class EstateRepositoryImpl implements EstateRepository{
         EntityManager em = factory.createEntityManager();
         List<PropertyDTO> props = null;
         try{
-            props = em.createNamedQuery("getAllProps").getResultList();
-            props.forEach(System.out::println);
+            UserDTO user = em.find(UserDTO.class,userId);
+            props = em.createNamedQuery("getAllPropsToSell").setParameter("currUser",user).getResultList();
+            props.forEach(c -> System.err.println("Type : "+c.getPropertyType()+" Location : "+c.getPropertyLocation()));
         }catch(PersistenceException pe){
             System.out.println("Error in finding properties details--- "+pe.getMessage());
         }finally {
@@ -296,12 +296,12 @@ public class EstateRepositoryImpl implements EstateRepository{
         EntityManager em = factory.createEntityManager();
         try{
             em.getTransaction().begin();
+            PropertyDTO propertyDTO = em.find(PropertyDTO.class,propertyId);
 
             UserDTO user = em.find(UserDTO.class,userId);
             biddDTO.setUserBid(user);
             user.getBids().add(biddDTO);
 
-            PropertyDTO propertyDTO = em.find(PropertyDTO.class,propertyId);
             biddDTO.setProperty(propertyDTO);
             propertyDTO.getBids().add(biddDTO);
 
@@ -314,5 +314,76 @@ public class EstateRepositoryImpl implements EstateRepository{
             em.close();
         }
 
+    }
+
+    @Override
+    public List<BiddDTO> getUserPropertiesToSell(Integer userId) {
+        List<BiddDTO> bids = new ArrayList<>();
+        EntityManager em = factory.createEntityManager();
+        UserDTO user = em.find(UserDTO.class,userId);
+        bids = em.createNamedQuery("getUserPropertiesToSell").setParameter("userId",user).getResultList();
+        return bids;
+    }
+
+    @Override
+    public void sellProperty(Integer bidId,Integer sellerId) {
+        EntityManager em = factory.createEntityManager();
+
+        try{
+            em.getTransaction().begin();
+            SoldBoughtDTO soldBoughtDTO = new SoldBoughtDTO();
+            BiddDTO biddDTO = em.find(BiddDTO.class,bidId);
+            UserDTO seller = em.find(UserDTO.class,sellerId);
+            UserDTO buyer = em.find(UserDTO.class,biddDTO.getUserBid().getUserId());
+
+            if(!biddDTO.getProperty().getPropertyStatus().equals("SOLD")){
+                soldBoughtDTO.setProperty(biddDTO.getProperty());
+                Integer propertyId = biddDTO.getProperty().getPropertyId();
+                em.createNamedQuery("setPropertyStatus").setParameter("pId",propertyId).executeUpdate();
+            }
+            soldBoughtDTO.setBuyer(buyer);
+            soldBoughtDTO.setBoughtOrSoldOn(LocalDateTime.now());
+            soldBoughtDTO.setSeller(seller);
+            soldBoughtDTO.setBid(biddDTO);
+
+
+            em.persist(soldBoughtDTO);
+            em.getTransaction().commit();
+        }catch(PersistenceException pe){
+            System.out.println("Error in saving new record : "+pe.getMessage());
+            em.getTransaction().rollback();
+        }finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<SoldBoughtDTO> getPropertiesBoughtByUser(Integer userId) {
+        EntityManager em = factory.createEntityManager();
+        List<SoldBoughtDTO> buyed = new ArrayList<>();
+        try{
+            UserDTO userDTO = em.find(UserDTO.class,userId);
+            buyed = em.createNamedQuery("propertiesBuyedByUser").setParameter("buyer",userDTO).getResultList();
+        }catch(PersistenceException pe){
+            System.err.println("   --- "+pe.getMessage());
+        }finally {
+            em.close();
+        }
+        return buyed;
+    }
+
+    @Override
+    public List<SoldBoughtDTO> getPropertiesSoldByUser(Integer userId) {
+        EntityManager em = factory.createEntityManager();
+        List<SoldBoughtDTO> sold = new ArrayList<>();
+        try{
+            UserDTO userDTO = em.find(UserDTO.class,userId);
+            sold = em.createNamedQuery("propertiesSoldByUser").setParameter("seller",userDTO).getResultList();
+        }catch (PersistenceException pe){
+            System.out.println(" ------- "+pe.getMessage());
+        }finally {
+            em.close();
+        }
+        return sold;
     }
 }

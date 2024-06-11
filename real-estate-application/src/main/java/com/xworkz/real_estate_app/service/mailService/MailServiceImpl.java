@@ -23,11 +23,11 @@ public class MailServiceImpl implements MailService {
 
     @Override
     public boolean sendOtp(UserDTO userDTO,String otp) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(userDTO.getUserEmailId());
-        mailMessage.setSubject("Otp for login");
-        mailMessage.setText("Your Otp is : "+otp+".\nThis will be valid till 10 minutes");
-        configuration.mailConfig().send(mailMessage);
+//        SimpleMailMessage mailMessage = new SimpleMailMessage();
+//        mailMessage.setTo(userDTO.getUserEmailId());
+//        mailMessage.setSubject("Otp for login");
+//        mailMessage.setText("Your Otp is : "+otp+".\nThis will be valid till 10 minutes");
+//        configuration.mailConfig().send(mailMessage);
         return true;
     }
 }

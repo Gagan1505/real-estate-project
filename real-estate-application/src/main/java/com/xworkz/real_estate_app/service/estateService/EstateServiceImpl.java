@@ -1,9 +1,6 @@
 package com.xworkz.real_estate_app.service.estateService;
 
-import com.xworkz.real_estate_app.dto.AuditDTO;
-import com.xworkz.real_estate_app.dto.BiddDTO;
-import com.xworkz.real_estate_app.dto.PropertyDTO;
-import com.xworkz.real_estate_app.dto.UserDTO;
+import com.xworkz.real_estate_app.dto.*;
 import com.xworkz.real_estate_app.repository.EstateRepository;
 import com.xworkz.real_estate_app.service.mailService.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +126,7 @@ public class EstateServiceImpl implements EstateService {
 
     @Override
     public void validateAndSaveProperty( int userId,PropertyDTO propertyDTO) {
+        propertyDTO.setPropertyStatus("FOR-SALE");
         repository.addProperty(userId,propertyDTO);
     }
 
@@ -136,7 +134,7 @@ public class EstateServiceImpl implements EstateService {
     public List<PropertyDTO> getAllPropertiesOtherThanUser(int userId) {
         List<PropertyDTO> properties = new ArrayList<>();
         for(PropertyDTO prop: repository.getAllProperties(userId)){
-            if(prop.getUser().getUserId()!=userId){
+            if(!prop.getPropertyStatus().equals("SOLD") && prop != null){
                 properties.add(prop);
             }
         }
@@ -147,5 +145,25 @@ public class EstateServiceImpl implements EstateService {
     public void bidForAProperty(BiddDTO biddDTO, Integer propertyId, Integer userId) {
         repository.addBidForProperty(biddDTO,propertyId,userId);
 
+    }
+
+    @Override
+    public List<BiddDTO> getAllUserPropertiesToSell(Integer userId) {
+        return repository.getUserPropertiesToSell(userId);
+    }
+
+    @Override
+    public void sellProperty(Integer bidId, Integer sellerId) {
+        repository.sellProperty(bidId,sellerId);
+    }
+
+    @Override
+    public List<SoldBoughtDTO> getPropertiesBoughtByUser(Integer userId) {
+        return repository.getPropertiesBoughtByUser(userId);
+    }
+
+    @Override
+    public List<SoldBoughtDTO> getPropertiesSoldByUser(Integer userId) {
+        return repository.getPropertiesSoldByUser(userId);
     }
 }

@@ -71,10 +71,28 @@
             <a href="bought">BOUGHT</a>
             <a href="sold">SOLD</a>
             <a href="logout">LOGOUT</a>
-            <span>${updateSuccessMsg}</span>
-
         </div>
     </div>
+    <table class="table mt-5">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Location</th>
+            <th scope="col">Bid Amount</th>
+            <th scope="col">Bought From</th>
+          </tr>
+        </thead>
+        <tbody>
+          <c:forEach var="sold" items="${soldProps}">
+          <tr>
+            <td>${sold.getProperty().getPropertyLocation()}</td>
+            <td>${sold.getBid().getBidAmount()}</td>
+            <td>${sold.getSeller().getUserFirstName()}</td>
+          </tr>
+          </c:forEach>
+        </tbody>
+      </table>
+
+
 
 </body>
 </html>
