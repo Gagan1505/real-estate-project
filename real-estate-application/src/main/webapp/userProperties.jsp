@@ -1,5 +1,3 @@
-
-
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -25,48 +23,44 @@
                 }
 
                 .navbar {
-                    width: 100vw;
-                    background-color: black;
                     position: fixed;
-                    height: 50px;
                     top: 0;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    justify-content: end;
+                    border-bottom: 1px solid rgb(143, 143, 143);
+                    box-shadow: rgb(115, 129, 143) 0px 20px 30px -10px;
+                    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 }
 
                 .logo {
-                    left: 0;
-                    position: fixed;
+                    width: 100vw;
                     display: flex;
                     align-items: center;
-                    background-color: black;
+                    justify-content: space-between;
+                    background-color: rgb(255, 255, 255);
                 }
 
                 .logo-img {
-                    margin: 0px 10px;
+                    margin: 5px 10px;
                 }
 
-                .icons {
+                .buttons {
                     display: flex;
                     flex-direction: row;
-                    justify-content: end;
-                    align-items: center;
-                    background-color: rgb(0, 0, 0);
-                    margin-right: 30PX;
-                    gap: 10px;
-                    width: 60vw;
+                    justify-content: center;
                 }
 
-                a {
+                .buttons a,
+                .buttons h4 {
+                    margin: 10px 5px;
+                    background-color: rgb(255, 255, 255);
+                    padding: 3px 12px;
+                    border-right: 1px solid rgb(133, 133, 133);
                     text-decoration: none;
-                    color: aliceblue;
+                    color: black;
                 }
 
-                a:hover {
-                    color: rgb(255, 4, 0);
-
+                .buttons a:hover {
+                    cursor: pointer;
+                    font-weight: bolder;
                 }
 
                 .c-card {
@@ -127,53 +121,55 @@
         </head>
 
         <body>
-            <div class="navbar m-0 p-0">
+            <div class="navbar">
                 <div class="logo">
                     <img src="https://www.x-workz.in//static/media/Logo.cf195593dc1b3f921369.png" width="100"
                         height="50" alt="Xworkz" class="logo-img">
-                    <a href="toDashboard">HOME</a>
-                </div>
-                <div class="icons">
-                    <a href="#">${user.getUserFirstName()}<i class="bi bi-person-circle"></i></a>
+                    <div class="buttons">
+                        <h4>Hello User</h4>
+                        <a href="toDashboard">Home</a>
+                    </div>
                 </div>
             </div>
-            <small>${NOTHING}</small>
             <div class="c-cards" style="width: 100%; margin-top: 50px;height:max-content">
                 <div class="row">
-                <small>${SellSuccess}</small>
-                <c:forEach var="bid" items="${bids}">
-                    <div class="col col-md-6 col-lg-4 col-sm-12 p-2" style="height:auto;">
-                        <div class="c-card">
-                            <div class="c-card-content">
-                                <div class="c-card-header">
-                                    <div class="d-flex justify-content-between p-2">
-                                        <span>${bid.getProperty().getPropertyType()}</span>
-                                        <span>${bid.getProperty().getPropertyValue()} INR</span>
+                    <small>${SellSuccess}</small>
+                    <c:forEach var="bid" items="${bids}">
+                        <div class="col col-md-6 col-lg-4 col-sm-12 p-2" style="height:auto;">
+                            <div class="c-card">
+                                <div class="c-card-content">
+                                    <div class="c-card-header">
+                                        <div class="d-flex justify-content-between p-2">
+                                            <span>${bid.getProperty().getPropertyType()}</span>
+                                            <span>${bid.getProperty().getPropertyValue()} INR</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="c-card-body p-2">
-                                    <span class="row mb-1 border-bottom"><span class="col-5 border-end"><b>Bidder Name</b></span>
-                                    <span class="col-5 c-ownr">${bid.getUserBid().getUserFirstName()}</span></span>
+                                    <div class="c-card-body p-2">
+                                        <span class="row mb-1 border-bottom"><span class="col-5 border-end"><b>Bidder
+                                                    Name</b></span>
+                                            <span
+                                                class="col-5 c-ownr">${bid.getUserBid().getUserFirstName()}</span></span>
 
-                                    <span class="row mb-1 border-bottom"><span class="col-5 border-end"><b>Bid Amount</b></span>
-                                    <span class="col-5 c-phone">${bid.getBidAmount()}</span></span>
-                                    <span class="row mb-1 border-bottom"><span class="col-5 border-end"><b>Property Location</b></span>
-                                    <span class="col-5 c-loc">${bid.getProperty().getPropertyLocation()}</span></span>
+                                        <span class="row mb-1 border-bottom"><span class="col-5 border-end"><b>Bid
+                                                    Amount</b></span>
+                                            <span class="col-5 c-phone">${bid.getBidAmount()}</span></span>
+                                        <span class="row mb-1 border-bottom"><span class="col-5 border-end"><b>Property
+                                                    Location</b></span>
+                                            <span
+                                                class="col-5 c-loc">${bid.getProperty().getPropertyLocation()}</span></span>
 
-                                </div>
-                                <div class="c-card-footer d-flex justify-content-center p-2 m-0">
-                                    <a href="sellProperty?bidId=${bid.getBidId()}" class="btn btn-success btn-pill m-0 p-1 w-100 row"><button class="btn btn-success btn-pill m-0 p-1 w-100 row">SELL</button></a>
+                                    </div>
+                                    <div class="c-card-footer d-flex justify-content-center p-2 m-0">
+                                        <a href="sellProperty?bidId=${bid.getBidId()}"
+                                            class="btn btn-success btn-pill m-0 p-1 w-100 row"><button
+                                                class="btn btn-success btn-pill m-0 p-1 w-100 row">SELL</button></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </c:forEach>
                 </div>
             </div>
-
-
-
-
 
         </body>
 
