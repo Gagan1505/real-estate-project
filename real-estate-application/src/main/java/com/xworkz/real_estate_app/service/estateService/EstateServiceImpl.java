@@ -133,7 +133,7 @@ public class EstateServiceImpl implements EstateService {
     @Override
     public List<PropertyDTO> getAllPropertiesOtherThanUser(int userId) {
         List<PropertyDTO> properties = new ArrayList<>();
-        for(PropertyDTO prop: repository.getAllProperties(userId)){
+        for(PropertyDTO prop: repository.getAllPropertiesToBid(userId)){
             if(!prop.getPropertyStatus().equals("SOLD") && prop != null){
                 properties.add(prop);
             }

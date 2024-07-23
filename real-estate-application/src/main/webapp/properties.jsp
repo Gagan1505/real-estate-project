@@ -23,48 +23,44 @@
                 }
 
                 .navbar {
-                    width: 100vw;
-                    background-color: black;
                     position: fixed;
-                    height: 50px;
                     top: 0;
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    justify-content: end;
+                    border-bottom: 1px solid rgb(143, 143, 143);
+                    box-shadow: rgb(115, 129, 143) 0px 20px 30px -10px;
+                    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 }
 
                 .logo {
-                    left: 0;
-                    position: fixed;
+                    width: 100vw;
                     display: flex;
                     align-items: center;
-                    background-color: black;
+                    justify-content: space-between;
+                    background-color: rgb(255, 255, 255);
                 }
 
                 .logo-img {
-                    margin: 0px 10px;
+                    margin: 5px 10px;
                 }
 
-                .icons {
+                .buttons {
                     display: flex;
                     flex-direction: row;
-                    justify-content: end;
-                    align-items: center;
-                    background-color: rgb(0, 0, 0);
-                    margin-right: 30PX;
-                    gap: 10px;
-                    width: 60vw;
+                    justify-content: center;
                 }
 
-                a {
+                .buttons a,
+                .buttons h4 {
+                    margin: 10px 5px;
+                    background-color: rgb(255, 255, 255);
+                    padding: 3px 12px;
+                    border-right: 1px solid rgb(133, 133, 133);
                     text-decoration: none;
-                    color: aliceblue;
+                    color: black;
                 }
 
-                a:hover {
-                    color: rgb(255, 4, 0);
-
+                .buttons a:hover {
+                    cursor: pointer;
+                    font-weight: bolder;
                 }
 
                 .c-card {
@@ -72,7 +68,7 @@
                     width: 100%;
                     padding: 5px;
                     font-family: Arial, Helvetica, sans-serif;
-                    border-top: 3px solid green;
+                    border-top: 1px solid green;
                     border-radius: 10px;
                     box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
                 }
@@ -125,65 +121,68 @@
         </head>
 
         <body>
-            <div class="navbar m-0 p-0">
+            <div class="navbar">
                 <div class="logo">
                     <img src="https://www.x-workz.in//static/media/Logo.cf195593dc1b3f921369.png" width="100"
                         height="50" alt="Xworkz" class="logo-img">
-                    <a href="toDashboard">HOME</a>
-                </div>
-                <div class="icons">
-                    <a href="#">${user.getUserFirstName()}<i class="bi bi-person-circle"></i></a>
+                    <div class="buttons">
+                        <h4>Hello User</h4>
+                        <a href="toDashboard">Home</a>
+                    </div>
                 </div>
             </div>
+
             <small>${NOTHING}</small>
             <div class="c-cards" style="width: 100%; margin-top: 50px;height:max-content">
+                <marquee behavior="" direction=""><small style="color: red;">These are the properties currently
+                        available for sale!!! Please bid your desired amount for desired property</small></marquee>
                 <div class="row">
-                <c:forEach var="prop" items="${props}">
-                    <div class="col col-md-6 col-lg-4 col-sm-12 p-2" style="height:auto;">
-                        <div class="c-card">
-                            <div class="c-card-content">
-                                <div class="c-card-header">
-                                    <div class="d-flex justify-content-between p-2">
-                                        <span>${prop.getPropertyType()}</span>
-                                        <span>${prop.getPropertyValue()} INR</span>
+                    <c:forEach var="prop" items="${props}">
+                        <div class="col col-md-6 col-lg-4 col-sm-12 p-2" style="height:auto;">
+                            <div class="c-card">
+                                <div class="c-card-content">
+                                    <div class="c-card-header">
+                                        <div class="d-flex justify-content-between p-2">
+                                            <span>${prop.getPropertyType()}</span>
+                                            <span>${prop.getPropertyValue()} INR</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="c-card-body p-2">
-                                    <span class="row mb-1"><span class="col-1"><svg xmlns="http://www.w3.org/2000/svg"
-                                                width="16" height="16" fill="currentColor" class="bi bi-person-fill"
-                                                viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                                            </svg></span><span class="col-10 c-ownr">${prop.getUser().getUserFirstName()}</span></span>
-                                    <span class="row mb-1"><span class="col-1"><svg xmlns="http://www.w3.org/2000/svg"
-                                                width="16" height="16" fill="currentColor" class="bi bi-telephone-fill"
-                                                viewBox="0 0 16 16">
-                                                <path fill-rule="evenodd"
-                                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
-                                            </svg></span><span class="col-10 c-phone">${prop.getUser().getUserPhoneNumber()}</span></span>
-                                    <span class="row"><span class="col-1"><svg xmlns="http://www.w3.org/2000/svg"
-                                                width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill"
-                                                viewBox="0 0 16 16">
-                                                <path
-                                                    d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
-                                            </svg></span><span
-                                            class="col-10 c-loc">${prop.getPropertyLocation()}</span></span>
+                                    <div class="c-card-body p-2">
+                                        <span class="row mb-1"><span class="col-1"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                                                </svg></span><span
+                                                class="col-10 c-ownr">${prop.getUser().getUserFirstName()}</span></span>
+                                        <span class="row mb-1"><span class="col-1"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-telephone-fill"
+                                                    viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
+                                                </svg></span><span
+                                                class="col-10 c-phone">${prop.getUser().getUserPhoneNumber()}</span></span>
+                                        <span class="row"><span class="col-1"><svg xmlns="http://www.w3.org/2000/svg"
+                                                    width="16" height="16" fill="currentColor"
+                                                    class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                                    <path
+                                                        d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                                                </svg></span><span
+                                                class="col-10 c-loc">${prop.getPropertyLocation()}</span></span>
 
-                                </div>
-                                <div class="c-card-footer d-flex justify-content-center p-2 m-0">
-                                    <a href="bidProperty?propertyId=${prop.getPropertyId()}" class="btn btn-success btn-pill m-0 p-1 w-100 row"><button class="btn btn-success btn-pill m-0 p-1 w-100 row">BID</button></a>
+                                    </div>
+                                    <div class="c-card-footer d-flex justify-content-center p-2 m-0">
+                                        <a href="bidProperty?propertyId=${prop.getPropertyId()}"
+                                            class="btn btn-success btn-pill m-0 p-1 w-100 row"><button
+                                                class="btn btn-success btn-pill m-0 p-1 w-100 row">BID</button></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </c:forEach>
                 </div>
             </div>
-
-
-
-
-
         </body>
 
         </html>

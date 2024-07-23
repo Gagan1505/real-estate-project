@@ -162,8 +162,10 @@ public class EstateController {
     @GetMapping("/estateProperties")
     public String getAllProperties(HttpSession session,Model model){
         Integer userId = (Integer) session.getAttribute("userId");
+        System.out.println(userId+"   ----------------------------- user Id is  -------------");
         if(userId != null){
             List<PropertyDTO> estates = service.getAllPropertiesOtherThanUser(userId);
+            System.err.println("------------------------------------------------------------"+estates);
             if(estates.isEmpty()){
                 model.addAttribute("NOTHING","no properties present to display");
             }else{
@@ -238,7 +240,7 @@ public class EstateController {
             model.addAttribute("soldProps",service.getPropertiesSoldByUser(userId));
             return "propertiesSold";
         }else{
-            model.addAttribute("loginError","Please LOgin Again");
+            model.addAttribute("loginError","Please Login Again");
             return "index";
         }
     }

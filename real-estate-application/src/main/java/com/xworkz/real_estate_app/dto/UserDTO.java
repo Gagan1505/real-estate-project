@@ -129,10 +129,10 @@ public class UserDTO {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "userBid",orphanRemoval = true)
     private List<BiddDTO> bids;
 
-//    @OneToMany(mappedBy = "seller")
-//    private List<SoldBoughtDTO> sold;
-//
-//    @OneToMany(mappedBy = "buyer")
-//    private List<SoldBoughtDTO> bought;
+    @OneToMany(mappedBy = "seller")
+    private List<SoldBoughtDTO> sold;
+
+    @OneToMany(mappedBy = "buyer")
+    private List<SoldBoughtDTO> bought;
 
 }

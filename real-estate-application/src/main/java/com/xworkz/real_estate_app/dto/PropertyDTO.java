@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @NamedQueries(
         {
-                @NamedQuery(name = "getAllPropsToSell",query = "SELECT p FROM PropertyDTO p WHERE p.user != :currUser"),
+                @NamedQuery(name = "getAllPropsToBid",query = "SELECT p FROM PropertyDTO p WHERE p.user != :currUser"),
                 @NamedQuery(name = "setPropertyStatus",query = "UPDATE PropertyDTO p " +
                         "SET p.propertyStatus = 'SOLD' WHERE p.propertyId = :pId")
         }

@@ -32,7 +32,7 @@ public interface EstateRepository {
 
     void addProperty(int userId,PropertyDTO propertyDTO);
 
-    List<PropertyDTO> getAllProperties(int userId);
+    List<PropertyDTO> getAllPropertiesToBid(int userId);
 
 
     // ------------------- BID THE PROPERTY ---------------

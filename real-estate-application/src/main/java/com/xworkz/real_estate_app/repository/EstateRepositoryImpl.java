@@ -276,13 +276,13 @@ public class EstateRepositoryImpl implements EstateRepository{
     }
 
     @Override
-    public List<PropertyDTO> getAllProperties(int userId) {
+    public List<PropertyDTO> getAllPropertiesToBid(int userId) {
         EntityManager em = factory.createEntityManager();
         List<PropertyDTO> props = null;
         try{
             UserDTO user = em.find(UserDTO.class,userId);
-            props = em.createNamedQuery("getAllPropsToSell").setParameter("currUser",user).getResultList();
-            props.forEach(c -> System.err.println("Type : "+c.getPropertyType()+" Location : "+c.getPropertyLocation()));
+            System.err.println("User Name in find of getAllProps is : --------------- "+user.getUserFirstName());
+            props = em.createNamedQuery("getAllPropsToBid").setParameter("currUser",user).getResultList();
         }catch(PersistenceException pe){
             System.out.println("Error in finding properties details--- "+pe.getMessage());
         }finally {

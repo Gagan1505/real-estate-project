@@ -51,6 +51,8 @@ public class OTPController {
         UserDTO userDTO = service.getUserByEmail(email);
         int code = otpService.verifyUserOtpToLogin(email,otpEntered);
         if(code == 1){
+            System.err.println("------------------- user is ------------------"+userDTO);
+            System.err.println("---------------- And id is : ----------------"+userDTO.getUserId());
             model.addAttribute("user",userDTO);
             model.addAttribute("userId",userDTO.getUserId());
             model.addAttribute("msg","Login successful");
